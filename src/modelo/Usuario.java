@@ -104,14 +104,11 @@ public class Usuario {
 	public void setSaldo(double saldo) {
 		this.saldo = saldo;
 	}
-	
-	
-	
-	
 
-	
-	
-
-
+	@Override
+	public String toString() {
+		return "[" +nombre + " " + apellido1 + " " + apellido2 + ", " + dni + ", " + telefono + ", " + email + ", " + vehiculo + "]";
+				
+	}
 
 }
