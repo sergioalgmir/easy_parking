@@ -1,37 +1,40 @@
 package modelo;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class Reserva implements Comparable<Reserva> {
+import modelo.plaza.Plaza;
+import modelo.usuario.Administrador;
+import modelo.usuario.Cliente;
 
-	static int numReserva = 0;
+public class Estacionamiento implements Comparable<Estacionamiento> {
+
+	static int numEstacionamiento = 0;
 	Integer id;
 	private String dniUsuario;
 	private Plaza plaza;
 	private LocalDateTime fechaHoraInicio;
 	private LocalDateTime fechaHoraFin;
 	private double precio;
-	private boolean finalizada = false; //true si ha terminado y false en caso contrario
+	private boolean finalizado = false; // true si ha terminado y false en caso contrario
 
-public boolean isFinalizada() {
-		return finalizada;
+	public boolean isFinalizado() {
+		return finalizado;
 	}
 
-	
-	//	Constructores
-	public Reserva() {
+	// Constructores
+	public Estacionamiento() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Reserva(Usuario u, Plaza p, LocalDateTime fechaHoraInicio, LocalDateTime fechaHoraFin) {
-		this.id = ++numReserva;
+	public Estacionamiento(Cliente u, Plaza p, LocalDateTime fechaHoraInicio) {
+		this.id = ++numEstacionamiento;
 		this.dniUsuario = u.getDni();
 		this.plaza = p;
-		this.fechaHoraInicio = fechaHoraInicio;
-		this.fechaHoraFin = fechaHoraFin;
-		this.precio = calcularPrecio();
+		this.fechaHoraInicio = LocalDateTime.now();
+		this.precio = 0;
 
 	}
 
@@ -41,16 +44,8 @@ public boolean isFinalizada() {
 		return fechaHoraInicio;
 	}
 
-	public void setFechaHoraInicio(LocalDateTime fechaHoraInicio) {
-		this.fechaHoraInicio = fechaHoraInicio;
-	}
-
 	public LocalDateTime getFechaHoraFin() {
 		return fechaHoraFin;
-	}
-
-	public void setFechaHoraFin(LocalDateTime fechaHoraFin) {
-		this.fechaHoraFin = fechaHoraFin;
 	}
 
 	public int getId() {
@@ -68,11 +63,10 @@ public boolean isFinalizada() {
 	public double getPrecio() {
 		return precio;
 	}
-	
-	public void finalizar() {
-		finalizada=true;
-	}
 
+	public void finalizar() {
+		finalizado = true;
+	}
 
 //	equals & hashCode. Dos reservas son iguales si tienen el mismo id, las mismas horas de inicio y fin y la misma plaza
 
@@ -89,14 +83,13 @@ public boolean isFinalizada() {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Reserva other = (Reserva) obj;
+		Estacionamiento other = (Estacionamiento) obj;
 		return Objects.equals(fechaHoraFin, other.fechaHoraFin)
 				&& Objects.equals(fechaHoraInicio, other.fechaHoraInicio) && id == other.id
 				&& Objects.equals(plaza, other.plaza);
 	}
 
 //	toString
-
 
 	@Override
 	public String toString() {
@@ -112,7 +105,7 @@ public boolean isFinalizada() {
 //	compareTo
 
 	@Override
-	public int compareTo(Reserva o) {
+	public int compareTo(Estacionamiento o) {
 		return this.id.compareTo(o.id);
 
 	}
@@ -120,14 +113,29 @@ public boolean isFinalizada() {
 //	Métodos de clase
 	/**
 	 * 
-	 * @return double. Precio total de la reserva
+	 * @return double. Precio total del estacionamiento
 	 */
 	public double calcularPrecio() {
-		Duration duracion = Duration.between(fechaHoraInicio, fechaHoraFin); // Se llama así al método porque es un
-																				// método estático
-		double horas = duracion.toMinutes() / 60.0; // Lo pasamos a minutos porque si lo pasamos a horas directamente
-													// con el método getHours(), se pierde la información de los minutos
-		return horas * this.plaza.getPrecioXHora();
+		if (fechaHoraFin == null)
+			return 0;
+		else {
+			Duration duracion = Duration.between(fechaHoraInicio, fechaHoraFin); // Se llama así al método porque es un
+																					// método estático
+			double horas = duracion.toMinutes() / 60.0; // Lo pasamos a minutos porque si lo pasamos a horas
+														// directamente
+														// con el método getHours(), se pierde la información de los
+														// minutos
+			return horas * this.plaza.getPrecioXHora();
+		}
 	}
 
+	public String terminarEstacionamiento(Administrador ad) {
+		if (!this.finalizado) {
+			this.fechaHoraFin = LocalDateTime.now();
+			this.precio = calcularPrecio(); // Se calcula ahora que hay fecha de fin
+			this.finalizado = true;
+			return "Estacionamiento finalizado correctamente";
+		} else
+			return "El establecimiento ya se mostraba finalizado en el sistema";
+	}
 }

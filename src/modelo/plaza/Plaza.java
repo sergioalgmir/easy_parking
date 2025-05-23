@@ -1,6 +1,8 @@
-package modelo;
+package modelo.plaza;
 
 import java.util.Objects;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 public abstract class Plaza implements Comparable<Plaza> {
 
@@ -10,6 +12,8 @@ public abstract class Plaza implements Comparable<Plaza> {
 	protected Vehiculo tipo;
 	protected boolean ocupado; // true si está ocupada y false si está libre
 	protected double precioXHora;
+	public static SortedSet<Plaza> plazasLibres = new TreeSet<Plaza>();
+	public static SortedSet<Plaza> plazasOcupadas = new TreeSet<Plaza>();
 
 //	Constructores
 
@@ -24,11 +28,12 @@ public abstract class Plaza implements Comparable<Plaza> {
 	 * @param ocupado  boolean (true si está ocupada y false si está libre)
 	 */
 
-	public Plaza(int planta, int numPlaza, boolean ocupado) {
+	public Plaza(int planta, int numPlaza) {
 		super();
 		this.planta = planta;
 		this.numPlaza = numPlaza;
-		this.ocupado = ocupado;
+		this.ocupado = false;
+		plazasLibres.add(this); // Se crea la plaza libre por defecto y se añade al listado de plazas libres
 
 	}
 
@@ -73,7 +78,6 @@ public abstract class Plaza implements Comparable<Plaza> {
 		return tipo;
 	}
 
-
 	/**
 	 * 
 	 * @return boolean, true si está ocupada la plaza y false en caso contrario
@@ -109,8 +113,16 @@ public abstract class Plaza implements Comparable<Plaza> {
 		this.precioXHora = precioXHora;
 	}
 
+	// Getters estáticos
 
-	
+	public static SortedSet<Plaza> getPlazasLibres() {
+		return plazasLibres;
+	}
+
+	public static SortedSet<Plaza> getPlazasOcupadas() {
+		return plazasOcupadas;
+	}
+
 //	equals & hashCode
 
 	@Override
@@ -118,7 +130,6 @@ public abstract class Plaza implements Comparable<Plaza> {
 		return Objects.hash(numPlaza, planta, tipo);
 	}
 
-	
 	/**
 	 * Dos plazas son iguales si tienen el mismo número de planta, mismo número de
 	 * plaza y el mismo tipo
@@ -135,8 +146,6 @@ public abstract class Plaza implements Comparable<Plaza> {
 		return numPlaza == other.numPlaza && planta == other.planta && tipo == other.tipo;
 	}
 
-	
-
 	/**
 	 * Se compara primero por número de planta y después por número de plaza
 	 */
@@ -148,7 +157,7 @@ public abstract class Plaza implements Comparable<Plaza> {
 
 		return compare;
 	}
-	
+
 //	 Métodos abstractos
 	public abstract String toString();
 

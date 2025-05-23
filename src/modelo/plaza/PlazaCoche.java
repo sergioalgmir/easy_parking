@@ -1,8 +1,10 @@
-package modelo;
+package modelo.plaza;
 
 public class PlazaCoche extends Plaza {
-	public PlazaCoche(int planta, int numPlaza, boolean ocupado) {
-		super(planta, numPlaza, ocupado);
+	
+	
+	public PlazaCoche(int planta, int numPlaza) {
+		super(planta, numPlaza);
 		this.tipo = Vehiculo.COCHE;
 		this.precioXHora = 0.97;
 
@@ -15,7 +17,7 @@ public class PlazaCoche extends Plaza {
 	public String toString() {
 		String disponibilidad = "";
 
-		if (ocupado == true)
+		if (ocupado == false)
 			disponibilidad = "Libre";
 		else
 			disponibilidad = "Ocupada";
