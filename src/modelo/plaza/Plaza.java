@@ -4,6 +4,8 @@ import java.util.Objects;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import modelo.GestorSistema;
+
 public abstract class Plaza implements Comparable<Plaza> {
 
 //	Atributos
@@ -12,8 +14,6 @@ public abstract class Plaza implements Comparable<Plaza> {
 	protected Vehiculo tipo;
 	protected boolean ocupado; // true si está ocupada y false si está libre
 	protected double precioXHora;
-	public static SortedSet<Plaza> plazasLibres = new TreeSet<Plaza>();
-	public static SortedSet<Plaza> plazasOcupadas = new TreeSet<Plaza>();
 
 //	Constructores
 
@@ -33,7 +33,10 @@ public abstract class Plaza implements Comparable<Plaza> {
 		this.planta = planta;
 		this.numPlaza = numPlaza;
 		this.ocupado = false;
-		plazasLibres.add(this); // Se crea la plaza libre por defecto y se añade al listado de plazas libres
+		
+		// Se crea la plaza libre por defecto y se añade al listado de plazas
+		// libres
+		GestorSistema.getPlazasLibres().add(this);
 
 	}
 
@@ -115,13 +118,6 @@ public abstract class Plaza implements Comparable<Plaza> {
 
 	// Getters estáticos
 
-	public static SortedSet<Plaza> getPlazasLibres() {
-		return plazasLibres;
-	}
-
-	public static SortedSet<Plaza> getPlazasOcupadas() {
-		return plazasOcupadas;
-	}
 
 //	equals & hashCode
 

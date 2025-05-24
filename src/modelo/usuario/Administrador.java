@@ -1,20 +1,16 @@
 package modelo.usuario;
 
+import java.time.LocalDateTime;
 import java.util.SortedSet;
-import java.util.TreeSet;
 
 import modelo.Estacionamiento;
+import modelo.GestorSistema;
 import modelo.plaza.Plaza;
 import modelo.plaza.Vehiculo;
 
 public class Administrador extends Usuario {
 
 	// Aunque las llame listas, son conjuntos para evitar que se repitan datos
-
-	private SortedSet<Cliente> listaClientes = new TreeSet<Cliente>();
-	private SortedSet<Plaza> listaPlazas = new TreeSet<Plaza>();
-	private SortedSet<Estacionamiento> listaEstacionamientosFinalizados = new TreeSet<Estacionamiento>();
-	private SortedSet<Estacionamiento> listaEstacionamientosActivos = new TreeSet<Estacionamiento>();
 
 //	Constructores
 
@@ -35,23 +31,21 @@ public class Administrador extends Usuario {
 	// desde el getter
 
 	public SortedSet<Cliente> getListaClientes() {
-		return listaClientes;
+		return GestorSistema.getListaClientes();
 	}
 
 	public SortedSet<Plaza> getListaPlazas() {
-		return listaPlazas;
+		return GestorSistema.getListaPlazas();
 	}
 
 	public SortedSet<Estacionamiento> getListaEstacionamientosFinalizados() {
-		return listaEstacionamientosFinalizados;
+		return GestorSistema.getListaEstacionamientosFinalizados();
 	}
-	
-	
-	
+
 //	toString
 
 	public SortedSet<Estacionamiento> getListaEstacionamientosActivos() {
-		return listaEstacionamientosActivos;
+		return GestorSistema.getListaEstacionamientosActivos();
 	}
 
 	@Override
@@ -62,6 +56,8 @@ public class Administrador extends Usuario {
 	}
 
 //	Métodos de la clase
+	
+	//Relacionados con las plazas
 
 	public String crearPlaza(Plaza p) {
 		if (this.getListaPlazas().contains(p)) {
@@ -75,6 +71,10 @@ public class Administrador extends Usuario {
 	public String eliminarPlaza(Plaza p) {
 		if (this.getListaPlazas().contains(p)) {
 			this.getListaPlazas().remove(p);
+			if (GestorSistema.getPlazasLibres().contains(p))
+				GestorSistema.getPlazasLibres().remove(p);
+			else if(GestorSistema.getPlazasOcupadas().contains(p))
+				GestorSistema.getPlazasOcupadas().remove(p);
 			return "Plaza eliminada del sistema.";
 		} else
 			return "La plaza no se encontraba en el sistema.";
@@ -89,13 +89,15 @@ public class Administrador extends Usuario {
 	 */
 	public String modificarPrecioPlazas(Vehiculo tipo, double precio) {
 
-		for (Plaza p : this.listaPlazas) {
+		for (Plaza p : this.getListaPlazas()) {
 			if (p.getTipo().equals(tipo))
 				p.setPrecioXHora(precio);
 		}
 		return "Precio modificado correctamente.";
 	}
 
+	
+	//Relacionados con los clientes
 	public String listarClientes() {
 		String lista = "";
 		for (Cliente c : this.getListaClientes()) {
@@ -108,9 +110,58 @@ public class Administrador extends Usuario {
 	public String eliminarCliente(Cliente c) {
 		if (this.getListaClientes().contains(c)) {
 			this.getListaClientes().remove(c);
+			c=null;
 			return "Cliente eliminado correctamente.";
 		} else
 			return "El cliente no se encontraba en el sistema.";
+	}
+
+	
+	//Relacionados con los estacionamientos
+	public String listarEstacionamientosTerminados() {
+		String lista = "";
+		for (Estacionamiento e : this.getListaEstacionamientosFinalizados()) {
+			lista += e.toString() + "\n";
+		}
+
+		return lista;
+	}
+
+	public String listarEstacionamientosActivos() {
+		String lista = "";
+		for (Estacionamiento e : this.getListaEstacionamientosActivos()) {
+			lista += e.toString() + "\n";
+		}
+
+		return lista;
+	}
+
+	public double getBeneficios(int opcion) {
+		double beneficios = 0;
+		LocalDateTime fechaActual = LocalDateTime.now();
+		LocalDateTime fechaLimite = null;
+		switch (opcion) {
+		case 1:
+			fechaLimite = fechaActual.minusDays(1);
+			break;
+
+		case 2:
+			fechaLimite = fechaActual.minusMonths(1);
+			break;
+		case 3:
+			fechaLimite = fechaActual.minusYears(1);
+			break;
+		default:
+			return 0;
+
+		}
+
+		for (Estacionamiento e : this.getListaEstacionamientosFinalizados()) {
+			if (e.getFechaHoraFin().isAfter(fechaLimite))
+				beneficios += e.getPrecio();
+		}
+		return beneficios;
+
 	}
 
 }

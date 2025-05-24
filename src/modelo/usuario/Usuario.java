@@ -31,8 +31,7 @@ public abstract class Usuario {
 		this.email = email;
 		this.telefono = telefono;
 		this.contraseña = contraseña;
-		
-		
+
 	}
 
 //	Getters & Setters
@@ -95,7 +94,7 @@ public abstract class Usuario {
 //	equals & hashCode
 	@Override
 	public int hashCode() {
-		return Objects.hash(dni, email, telefono);
+		return Objects.hash(apellido1, apellido2, dni, nombre);
 	}
 
 	@Override
@@ -107,12 +106,10 @@ public abstract class Usuario {
 		if (getClass() != obj.getClass())
 			return false;
 		Usuario other = (Usuario) obj;
-		return Objects.equals(dni, other.dni) && Objects.equals(email, other.email) && telefono == other.telefono;
+		return Objects.equals(apellido1, other.apellido1) && Objects.equals(apellido2, other.apellido2)
+				&& Objects.equals(dni, other.dni) && Objects.equals(nombre, other.nombre);
 	}
-	
 
 	public abstract String toString();
-	
-	
 
 }

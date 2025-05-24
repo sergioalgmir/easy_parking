@@ -1,12 +1,10 @@
 package modelo;
 
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 import modelo.plaza.Plaza;
-import modelo.usuario.Administrador;
 import modelo.usuario.Cliente;
 
 public class Estacionamiento implements Comparable<Estacionamiento> {
@@ -29,12 +27,13 @@ public class Estacionamiento implements Comparable<Estacionamiento> {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Estacionamiento(Cliente u, Plaza p, LocalDateTime fechaHoraInicio) {
+	public Estacionamiento(Cliente u, Plaza p) {
 		this.id = ++numEstacionamiento;
 		this.dniUsuario = u.getDni();
 		this.plaza = p;
 		this.fechaHoraInicio = LocalDateTime.now();
 		this.precio = 0;
+		GestorSistema.getListaEstacionamientosActivos().add(this);
 
 	}
 
@@ -129,11 +128,13 @@ public class Estacionamiento implements Comparable<Estacionamiento> {
 		}
 	}
 
-	public String terminarEstacionamiento(Administrador ad) {
+	public String terminarEstacionamiento() {
 		if (!this.finalizado) {
 			this.fechaHoraFin = LocalDateTime.now();
 			this.precio = calcularPrecio(); // Se calcula ahora que hay fecha de fin
 			this.finalizado = true;
+			if (!GestorSistema.getListaEstacionamientosFinalizados().contains(this))
+				GestorSistema.getListaEstacionamientosFinalizados().add(this);
 			return "Estacionamiento finalizado correctamente";
 		} else
 			return "El establecimiento ya se mostraba finalizado en el sistema";
