@@ -11,18 +11,6 @@ public class PlazaCoche extends Plaza {
 
 	}
 
-//	Implementación métodos abstractos
-	
-	@Override
-	public String toString() {
-		String disponibilidad = "";
 
-		if (ocupado == false)
-			disponibilidad = "Libre";
-		else
-			disponibilidad = "Ocupada";
-		return "[Planta " + planta + ", " + numPlaza + ", " + "Coche" + ", " + "Precio por hora: " + precioXHora + "€, "
-				+ disponibilidad + "]";
-	}
 
 }

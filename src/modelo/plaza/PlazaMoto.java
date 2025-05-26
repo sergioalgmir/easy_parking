@@ -12,16 +12,5 @@ public class PlazaMoto extends Plaza {
 
 	}
 
-	@Override
-//	Implementación métodos abstractos
-	public String toString() {
-		String disponibilidad = "";
 
-		if (ocupado == false)
-			disponibilidad = "Libre";
-		else
-			disponibilidad = "Ocupada";
-		return "[Planta " + planta + ", " + numPlaza + ", " + "Moto" + ", " + "Precio por hora: " + precioXHora + "€, "
-				+ disponibilidad + "]";
-	}
 }

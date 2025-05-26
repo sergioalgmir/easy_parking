@@ -92,6 +92,8 @@ public class Estacionamiento implements Comparable<Estacionamiento> {
 
 	@Override
 	public String toString() {
+		
+		
 		return "[" + id + "; Usuario: " + this.dniUsuario + "; Plaza: " + this.getPlaza() + "; Inicio: "
 				+ this.fechaHoraInicio.getDayOfMonth() + "/" + this.fechaHoraInicio.getMonthValue() + "/"
 				+ this.fechaHoraInicio.getYear() + " " + this.fechaHoraInicio.getHour() + ":"

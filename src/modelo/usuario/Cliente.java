@@ -3,6 +3,7 @@ package modelo.usuario;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import auxiliares.Validaciones;
 import modelo.Estacionamiento;
 import modelo.GestorSistema;
 import modelo.plaza.Plaza;
@@ -37,9 +38,6 @@ public class Cliente extends Usuario implements Comparable<Cliente> {
 		return saldo;
 	}
 
-	public void setSaldo(double saldo) {
-		this.saldo = saldo;
-	}
 
 	// toString
 
@@ -142,10 +140,16 @@ public class Cliente extends Usuario implements Comparable<Cliente> {
 				return ("Ha excedido el límite de intentos para restablecer su contraseña. Inténtelo de nuevo más tarde.");
 
 			} else {
+				
 				System.out.println("Introduzca la nueva contraseña.");
 				System.out.println(
 						"Recuerde que debe contener al menos una letra mayúscula, una letra minúscula y un número:");
 				String contrasenyaNueva = sc.next(); //VALIDAR CONTRASEÑA
+				
+				while (!Validaciones.validarContrasenya(contrasenyaActual)) {
+					System.out.println("Por favor, introduzca una contraseña que cumpla con los requisitos especificados:");
+					contrasenyaNueva=sc.next();
+				}
 				this.setContraseña(contrasenyaNueva);
 				return "Contraseña actualizada correctamente.";
 			}
@@ -154,33 +158,12 @@ public class Cliente extends Usuario implements Comparable<Cliente> {
 	
 	public String ingresarDinero(double cantidad) {
 		if (cantidad>0) {
-			this.setSaldo(cantidad);
+			this.saldo+=cantidad;
 			return "Ingreso realizado correctamente.";
 		}
 		else return "La cantidad introducida es inválida.";
 	}
 	
-	public String eliminarCuenta() {
-		try(Scanner sc = new Scanner(System.in)){
-			System.out.println("Introduzca su contraseña: ");
-			String contrasenya = sc.next();
-			if(!contrasenya.equals(this.contraseña)) {
-				return "Contraseña incorrecta. No se ha podido eliminar la cuenta.";
-			}
-		    System.out.println("Si está seguro de que desea eliminar la cuenta, pulse 15243:");
-			
-				int num = sc.nextInt();
-				if (num == 15243) {
-					
-					GestorSistema.getListaClientes().remove(this);
-					return "Cuenta eliminada correctamente.";
-					
-				
-			} else return "Código de confirmación incorrecto. Cuenta no eliminada.";
-		} catch (InputMismatchException e) {
-			return "El tipo de dato introducido es incorrecto.";
-			// TODO: handle exception
-		}
-	}
+
 
 }

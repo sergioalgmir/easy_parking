@@ -155,9 +155,12 @@ public class Administrador extends Usuario {
 			return 0;
 
 		}
+		
+		
 
 		for (Estacionamiento e : this.getListaEstacionamientosFinalizados()) {
-			if (e.getFechaHoraFin().isAfter(fechaLimite))
+			if (e.getFechaHoraFin().isAfter(fechaLimite) && e.getFechaHoraFin()!= null)
+				
 				beneficios += e.getPrecio();
 		}
 		return beneficios;

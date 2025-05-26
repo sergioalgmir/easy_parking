@@ -116,20 +116,15 @@ public abstract class Plaza implements Comparable<Plaza> {
 		this.precioXHora = precioXHora;
 	}
 
-	// Getters estáticos
 
 
-//	equals & hashCode
+//	equals & hashCode. Dos plazas son iguales si tienen la misma planta y el mismo número de plaza
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(numPlaza, planta, tipo);
+		return Objects.hash(numPlaza, planta);
 	}
 
-	/**
-	 * Dos plazas son iguales si tienen el mismo número de planta, mismo número de
-	 * plaza y el mismo tipo
-	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -139,7 +134,7 @@ public abstract class Plaza implements Comparable<Plaza> {
 		if (getClass() != obj.getClass())
 			return false;
 		Plaza other = (Plaza) obj;
-		return numPlaza == other.numPlaza && planta == other.planta && tipo == other.tipo;
+		return numPlaza == other.numPlaza && planta == other.planta;
 	}
 
 	/**
@@ -154,7 +149,19 @@ public abstract class Plaza implements Comparable<Plaza> {
 		return compare;
 	}
 
-//	 Métodos abstractos
-	public abstract String toString();
+	
+
+	@Override
+//	Implementación métodos abstractos
+	public String toString() {
+		String disponibilidad = "";
+
+		if (ocupado == false)
+			disponibilidad = "Libre";
+		else
+			disponibilidad = "Ocupada";
+		return "[Planta " + planta + ", " + numPlaza + ", " + "Moto" + ", " + "Precio por hora: " + precioXHora + "€, "
+				+ disponibilidad + "]";
+	}
 
 }
